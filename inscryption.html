@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8"></meta>
+    <title>Matthew Madden - Inscryption</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+    <div id="page">
+        <div id="header">
+            <span id="title" class="header-font">MATTHEW MADDEN</span>
+            <span id="title-divider">|</span>
+            <span id="subtitle" class="header-font">Game & Graphics Programmer</span>
+            <div id="socials">
+                <a href="https://www.linkedin.com/in/matthewkayin" target="_blank" class="social-link">
+                    <img src="img/linkedin.png" class="social-icon">
+                </a>
+                <a href="https://www.github.com/matthewkayin" target="_blank" class="social-link">
+                    <img src="img/github.png" class="social-icon">
+                </a>
+            </div>
+        </div>
+        <div class="article-section">
+            <a href="index.html">
+                <p><< Back</p>
+            </a>
+            <h2>Inscryption (Multiplayer Version)</h2>
+            <p>
+                This project is a multiplayer version of the popular roguelike card game
+                <a href="https://store.steampowered.com/app/1092790/Inscryption/">
+                    Inscryption
+                </a>. The original verison of the game was made by Daniel Mullens Games. As I played the
+                original, I found myself wishing that the game had a multiplayer mode. Since it did not,
+                I decided the only thing left to do was to make one myself!
+            </p>
+            <img src="img/inscryption/gameplay.gif" class="article-image">
+        </div>
+        <div class="article-section">
+            <h2>Making the Game</h2>
+            <p>
+                Turn-based like Inscryption always seem deceptively simple to make. After all, they're just
+                fancy menus, right? But it turns out they're <i>complicated</i> menus, too.
+            </p>
+            <p>
+                The key to managing all that complexity was a state machine architecture, which organizes
+                behavior into different states like PLAYER_DRAW and PLAYER_TURN.
+            </p>
+            <p>
+                Using Godot helped with this as well, because the engine has built-in tweening, and its scripting
+                language offers concurrency features in the form of an <code>await</code> keyword. Being able to handle
+                things like animations using <code>await</code> (as in <code>await card.animate_death()</code>), allowed me to reduce
+                the number of states in the state machine and also write the code in a way that was more legible.
+            </p>
+            <p>
+                As for the game's art assets, almost all of them come from the original Inscryption game files.
+                Inscryption is a Unity game, so I was able to use a third-party Unity resource unpacker to decompile
+                the pack file and get access to the assets. Some of the cards, like the Worker Ant and Flying Ant,
+                appeared only in Act I of Inscryption and so there was no Act II style portrait to accompany them.
+                I was able to work these cards into the game with the help of a pixel artist who descaled the Act I
+                portraits into the low-resolution Act II style.
+            </p>
+            <img src="img/inscryption/deckbuilding.png" class="article-image">
+        </div>
+        <div class="article-section">
+            <h2>Getting Everything Online</h2>
+            <p>
+                During development, I used desktop builds of the game and connected them over LAN for multiplayer
+                testing. When it came time to release, I figured it would be more convenient for players if I
+                released an HTML5 build, however the web build introduced some challenges with networking, since the
+                LAN socket based netcode no longer worked once the game was running through a browser.
+            </p>
+            <p>
+                To get through this hurdle I first had to switch from using UDP sockets to using web sockets, a transition
+                which Godot handled seamlessly. Then I had to setup a Godot program which could act as a
+                dedicated server. I hosted this server on an EC2 instance, complete with DNS and a CA. The CA
+                was necessary because I was hosting the web clients on itch.io, and itch only supports web sockets
+                through web socket secure, which requires a CA.
+            </p>
+            <p>
+                This was all worth it in the end, though, and I was able to enjoy a few rounds of multiplayer Inscryption with
+                my friends and family.
+            </p>
+        </div>
+    </div>
+</body>
