@@ -26,9 +26,7 @@
             <h2>Inscryption (Multiplayer Version)</h2>
             <p>
                 This project is a multiplayer version of the popular roguelike card game
-                <a href="https://store.steampowered.com/app/1092790/Inscryption/">
-                    Inscryption
-                </a>. The original verison of the game was made by Daniel Mullens Games. As I played the
+                <a href="https://store.steampowered.com/app/1092790/Inscryption/">Inscryption</a>. The original verison of the game was made by Daniel Mullens Games. As I played the
                 original, I found myself wishing that the game had a multiplayer mode. Since it did not,
                 I decided the only thing left to do was to make one myself!
             </p>
@@ -37,12 +35,12 @@
         <div class="article-section">
             <h2>Making the Game</h2>
             <p>
-                Turn-based like Inscryption always seem deceptively simple to make. After all, they're just
+                Turn-based games like Inscryption always seem deceptively simple to make. After all, they're just
                 fancy menus, right? But it turns out they're <i>complicated</i> menus, too.
             </p>
             <p>
                 The key to managing all that complexity was a state machine architecture, which organizes
-                behavior into different states like PLAYER_DRAW and PLAYER_TURN.
+                behavior into different states like <code>PLAYER_DRAW</code> and <code>PLAYER_TURN</code>.
             </p>
             <p>
                 Using Godot helped with this as well, because the engine has built-in tweening, and its scripting
@@ -52,9 +50,9 @@
             </p>
             <p>
                 As for the game's art assets, almost all of them come from the original Inscryption game files.
-                Inscryption is a Unity game, so I was able to use a third-party Unity resource unpacker to decompile
+                The original Inscryption is a Unity game, so I was able to use a third-party Unity resource unpacker to decompile
                 the pack file and get access to the assets. Some of the cards, like the Worker Ant and Flying Ant,
-                appeared only in Act I of Inscryption and so there was no Act II style portrait to accompany them.
+                appeared only in Act I of Inscryption and had no Act II style portrait to accompany them.
                 I was able to work these cards into the game with the help of a pixel artist who descaled the Act I
                 portraits into the low-resolution Act II style.
             </p>
@@ -65,7 +63,7 @@
             <p>
                 During development, I used desktop builds of the game and connected them over LAN for multiplayer
                 testing. When it came time to release, I figured it would be more convenient for players if I
-                released an HTML5 build, however the web build introduced some challenges with networking, since the
+                released an HTML5 build, but the web build introduced some challenges with networking, since the
                 LAN socket based netcode no longer worked once the game was running through a browser.
             </p>
             <p>

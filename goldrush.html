@@ -31,8 +31,8 @@
             </p>
             <p>
                 The game features LAN and online multiplayer, an AI opponent, a singleplayer campaign,
-                a level editor which I used to create the campaign, and a replay mode where plays can rewatch
-                their past matches. The game is also cross-play and cross-platform, and was released on Steam
+                a level editor which I used to create the campaign, and a replay mode where players can rewatch
+                their past matches. The game is also cross-play and cross-platform and was released on Steam
                 for Windows, Mac, and Linux.
             </p>
             <img src="img/goldrush/goldrush_portfolio_soldiers.gif" class="article-image">
@@ -48,39 +48,38 @@
                 To ensure determinism, the game:
             </p>
             <ul>
-                <li>Is architected so that the core simulation state (called the MatchState) is isolated from the rest of the game state</li>
-                <li>Leverages the command pattern to ensure that the MatchState is only ever altered via MatchInputs which can be shared among players</li>
+                <li>Is architected so that the core simulation state (called the <code>MatchState</code>) is isolated from the rest of the game state</li>
+                <li>Leverages the command pattern to ensure that the <code>MatchState</code> is only ever altered via <code>MatchInputs</code> which can be shared among players</li>
                 <li>Only ever updates with a fixed-timestep</li>
                 <li>Uses fixed-point numbers for sub-integer unit positions to avoid floating point non-determinism</li>
-                <li>Uses a custom random-number generator to avoid differences in rand() implementation across platforms and compilers</li>
+                <li>Uses a custom random-number generator to avoid differences in <code>rand()</code> implementation across platforms and compilers</li>
             </ul>
         </div>
         <div class="article-section">
             <h2>Desync Debugging</h2>
             <p>
                 Even with all these measures in place, desync bugs still occur. These bugs were the hardest to
-                resolve in the entire project because they are difficult to reproduce and their root cause is
+                resolve in the entire project because they are hard to reproduce and their root cause is
                 difficult to track down. While naive print debugging got me through a few of them, I eventually
                 needed to invest in better tooling.
             </p>
             <p>
                 Desync debugging starts by using checksums to identify when a desync has occurred. From there,
-                clients will compare their serialized MatchStates field-by-field, eventually hitting a debug break
+                clients will compare their serialized <code>MatchStates</code> field-by-field, eventually hitting a debug break
                 on the first field that doesn't match. This technique allowed me to see exactly what field went
                 out-of-sync and what the difference between the two fields was.
             </p>
             <p>
-                The final piece of this debugging strategy is reproducing the desync bug. To do this I setup a test
+                The final piece of this debugging strategy was reproducing the desync bug. To do this I setup a test
                 mode through which the game's AI opponents can play matches against each other on repeat. With this
                 in place, all I have to do is setup two laptops to play against each other in test mode and let them
-                do their thing until they run into a desync bug.
+                do their thing until they ran into a desync bug.
             </p>
             <p>
-                Once the desync bugs are found, they are usually pretty easy to solve. Common culprits include
-                uninitalized variables, improper MatchInput serialization, and improper usage of the custom
+                Once the desync bugs were found, they were usually pretty easy to solve. Common culprits included
+                uninitalized variables, improper <code>MatchInput</code> serialization, and improper usage of the custom
                 random generator.
             </p>
-            <!-- TODO: desync debugging, performance optimizations, map generation, pathing and unit behavior, renderer, level editor and campaign, replays -->
         </div>
         <div class="article-section">
             <h2>Performance Optimization</h2>
@@ -91,13 +90,13 @@
             <p>
                 One performance issue had to do with the aforementioned checksums, which were taking up to 10ms to
                 run even on an optimized build. To fix this, I reoganized the game's memory so
-                that all of the MatchState data was contiguous in memory, and I swapped my checksum
+                that all of the <code>MatchState</code> data was contiguous in memory. Then I swapped my checksum
                 function (Adler32) with a SIMD version of the same algorithm. These changes combined brought
                 the runtime of this function down to the hundreds of microseconds.
             </p>
             <p>
                 Another recurring performance issue was the pathfinding. The game uses grid-based A* pathfinding,
-                which is a great algorithm, except it has the major problem of having O(n^2) runtime. Therefore
+                which is a great algorithm, except it has the major problem of having O(n<span class="sup">2</span>) runtime. Therefore
                 most of my time on pathfinding was spent figuring out how to avoid that worst-case runtime.
             </p>
             <p>
@@ -110,9 +109,9 @@
             <p>
                 Another issue was that certain map geometries caused the A* heuristic to explore cells in
                 all the wrong places. Usually this was caused by ordering a unit on the lowground to go to a nearby
-                cell on the highground when the staircase to the highground is far away. Since the target cell is nearby,
+                cell on the highground when the staircase to the highground was far away. Since the target cell is nearby,
                 the heuristic led the pathfinder to explore cells nearby, not realizing that, in this particular situation,
-                the unit actually needs to walk the long way around to get to the staircase, and only then could it reach the
+                the unit actually needed to walk the long way around to get to the staircase and only then could it reach the
                 target highground cell.
             </p>
             <img src="img/goldrush/map_regions.png" class="article-image">
@@ -133,7 +132,7 @@
             </p>
             <p>
                 The editor was designed with the command pattern so that all changes are performed using
-                EditorAction objects which can be undone and redone as needed.
+                <code>EditorAction</code> objects which can be undone and redone as needed.
             </p>
             <p>
                 The editor is also implemented as a part of the game itself (though it is compiled-out in
@@ -144,7 +143,7 @@
                 The game uses Lua scripting to facilitate level-specific behaviors and exposes a flexible API
                 to the level scripts, allowing them to manage things like level objectives, camera pans, unit spawns,
                 and win conditions. Additionally, since the game uses LuaJIT as its runtime, I was able to
-                expose an FFI to the levels that allows them to query entity information efficiently.
+                expose an FFI to the levels that allowed them to query entity information efficiently.
             </p>
             <p>
                 The editor is tightly integrated with the level scripts. From within the editor, users can
